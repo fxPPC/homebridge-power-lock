@@ -7,7 +7,6 @@ import {
   PlatformAccessory,
   PlatformConfig,
   Service,
-  Characteristic,
   HAP,
 } from 'homebridge';
 import mqtt, { MqttClient } from 'mqtt';
@@ -24,9 +23,9 @@ interface LockConfig {
   name: string;
   mode: 'mqtt' | 'command' | 'dummy';
   autoLock?: boolean;
-  autoLockDelay?: number; // in seconds
-  lockDelay?: number; // in seconds
-  unlockDelay?: number; // in seconds
+  autoLockDelay?: number; 
+  lockDelay?: number; 
+  unlockDelay?: number; 
   logging?: 'debug' | 'normal' | 'minimal';
   // MQTT settings
   mqttSettings?: {
@@ -46,7 +45,7 @@ interface LockConfig {
     openCommand: string;
     closeCommand: string;
     monitorCommand: string;
-    monitorInterval: number; // in seconds
+    monitorInterval: number; 
   };
 }
 
