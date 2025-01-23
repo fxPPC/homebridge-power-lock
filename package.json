@@ -10,13 +10,13 @@
     "command-line",
     "virtual-lock"
   ],
-  "homepage": "https://github.com/yourusername/homebridge-power-lock",
+  "homepage": "https://github.com/fxPPC/homebridge-power-lock",
   "bugs": {
-    "url": "https://github.com/yourusername/homebridge-power-lock/issues"
+    "url": "https://github.com/fxPPC/homebridge-power-lock/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/homebridge-power-lock.git"
+    "url": "git+https://github.com/fxPPC/homebridge-power-lock.git"
   },
   "license": "Apache-2.0",
   "type": "module",
