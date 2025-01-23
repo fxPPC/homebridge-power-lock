@@ -34,7 +34,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
