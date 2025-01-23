@@ -18,7 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/yourusername/homebridge-power-lock.git"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "engines": {
     "node": ">=14.17.0",
@@ -44,11 +44,10 @@
     "mqtt": "^4.3.7"
   },
   "devDependencies": {
-    "@types/mqtt": "^3.0.3",
-    "@types/node": "^16.0.0",
-    "typescript": "^4.4.4",
-    "eslint": "^7.32.0",
-    "@typescript-eslint/parser": "^4.28.5",
-    "@typescript-eslint/eslint-plugin": "^4.28.5"
+    // Update these to unify versions and avoid ERESOLVE conflicts:
+    "eslint": "^8.32.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "typescript": "^4.9.5"
   }
 }
