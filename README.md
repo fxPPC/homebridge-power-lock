@@ -5,7 +5,7 @@
 
 A modern, fully-featured Homebridge plugin for creating virtual lock accessories. Build from the ground up to follow modern coding practices, be Homebridge v2 ready, and provide many options. I created this plugin after discovering all the other virtual lock plugins were either hopelessly outdated or missing needed features.
 
----
+![Homebridge Power Lock](./powerlockicon.png)
 
 ## Table of Contents
 
