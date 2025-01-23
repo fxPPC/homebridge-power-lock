@@ -10,18 +10,18 @@
     "command-line",
     "virtual-lock"
   ],
-  "homepage": "https://github.com/fxPPC/homebridge-power-lock",
+  "homepage": "https://github.com/yourusername/homebridge-power-lock",
   "bugs": {
-    "url": "https://github.com/fxPPC/homebridge-power-lock/issues"
+    "url": "https://github.com/yourusername/homebridge-power-lock/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fxPPC/homebridge-power-lock.git"
+    "url": "git+https://github.com/yourusername/homebridge-power-lock.git"
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18.0.0",
-    "homebridge": "^1.8.0 || ^2.0.0-beta.0"
+    "node": ">=14.17.0",
+    "homebridge": "^1.6.0 || ^2.0.0-beta.0"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -38,7 +38,7 @@
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "homebridge": "^1.8.0 || ^2.0.0-beta.0"
+    "homebridge": "^1.6.0 || ^2.0.0-beta.0"
   },
   "dependencies": {
     "mqtt": "^4.3.7"
@@ -50,5 +50,5 @@
     "typescript": "^4.9.5",
     "@types/node": "^18.0.0" 
   },
-  "logo": "./assets/powerlockicon.png"
+  "logo": "./assets/icon.png"  // <-- Added logo field
 }
