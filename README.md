@@ -25,13 +25,6 @@ A modern, fully-featured Homebridge plugin for creating virtual lock accessories
   - [Modes Overview](#modes-overview)
   - [User-Defined Options](#user-defined-options)
   - [Example Configuration](#example-configuration)
-- [Usage](#usage)
-  - [Lock/Unlock Controls](#lockunlock-controls)
-  - [Auto-Lock and Delays](#auto-lock-and-delays)
-- [Security Considerations](#security-considerations)
-- [Contributing](#contributing)
-- [License](#license)
-- [Support and Contact](#support-and-contact)
 
 ---
 
