@@ -3,10 +3,7 @@
 [![npm version](https://badge.fury.io/js/homebridge-power-lock.svg)](https://badge.fury.io/js/homebridge-power-lock)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A modern, fully-featured Homebridge plugin for creating virtual lock accessories.
-
-**Developed by:** Alice (fxPPC)  
-**Status:** Actively developed, targeting Homebridge's **Scoped and Verified** program.
+A modern, fully-featured Homebridge plugin for creating virtual lock accessories. Build from the ground up to follow modern coding practices, be Homebridge v2 ready, and provide many options. I created this plugin after discovering all the other virtual lock plugins were either hopelessly outdated or missing the needed features.
 
 ---
 
