@@ -1,47 +1,54 @@
 {
-  "name": "homebridge-plugin-name",
-  "displayName": "Plugin Name",
-  "type": "module",
-  "version": "1.0.0",
-  "private": true,
-  "description": "A short description about what your plugin does.",
-  "author": "Your Name",
-  "license": "Apache-2.0",
-  "homepage": "https://github.com/USERNAME/GITHUB_PROJECT_NAME#readme",
+  "name": "homebridge-power-lock",
+  "version": "0.4.2",
+  "description": "Homebridge plugin to create a virtual lock with MQTT, Linux command line, or dummy modes.",
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "lock",
+    "mqtt",
+    "command-line",
+    "virtual-lock"
+  ],
+  "homepage": "https://github.com/yourusername/homebridge-power-lock",
+  "bugs": {
+    "url": "https://github.com/yourusername/homebridge-power-lock/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/USERNAME/GITHUB_PROJECT_NAME.git"
+    "url": "git+https://github.com/yourusername/homebridge-power-lock.git"
   },
-  "bugs": {
-    "url": "https://github.com/USERNAME/GITHUB_PROJECT_NAME/issues"
-  },
-  "keywords": [
-    "homebridge-plugin"
-  ],
-  "main": "dist/index.js",
+  "license": "MIT",
+  "type": "module",
   "engines": {
-    "node": "^18.20.4 || ^20.18.0 || ^22.10.0",
-    "homebridge": "^1.8.0 || ^2.0.0-beta.0"
+    "node": ">=14.17.0",
+    "homebridge": "^1.6.0 || ^2.0.0-beta.0"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "build": "rimraf ./dist && tsc",
-    "lint": "eslint . --max-warnings=0",
-    "prepublishOnly": "npm run lint && npm run build",
-    "watch": "npm run build && npm link && nodemon"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "eslint . --ext .ts",
+    "prepublishOnly": "npm run build"
   },
-  "devDependencies": {
-    "@eslint/js": "^9.14.0",
-    "@types/eslint__js": "^8.42.3",
-    "@types/node": "^22.8.6",
-    "eslint": "^9.14.0",
-    "homebridge": "^2.0.0-beta.0",
-    "nodemon": "^3.1.7",
-    "rimraf": "^6.0.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.12.2"
+  "peerDependencies": {
+    "homebridge": "^1.6.0 || ^2.0.0-beta.0"
   },
   "dependencies": {
-    "homebridge-lib": "^7.1.0"
+    "mqtt": "^4.3.7"
+  },
+  "devDependencies": {
+    "@types/mqtt": "^3.0.3",
+    "@types/node": "^16.0.0",
+    "typescript": "^4.4.4",
+    "eslint": "^7.32.0",
+    "@typescript-eslint/parser": "^4.28.5",
+    "@typescript-eslint/eslint-plugin": "^4.28.5"
   }
 }
