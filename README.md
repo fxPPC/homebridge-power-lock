@@ -1,215 +1,255 @@
-<p align="center">
+# homebridge-power-lock
 
-<img src="https://github.com/homebridge/branding/raw/latest/logos/homebridge-wordmark-logo-vertical.png" width="150">
+[![npm version](https://badge.fury.io/js/homebridge-power-lock.svg)](https://badge.fury.io/js/homebridge-power-lock)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-</p>
+A modern, fully-featured Homebridge plugin for creating virtual lock accessories.
 
-<span align="center">
-
-# Homebridge Platform Plugin Template
-
-</span>
-
-> [!IMPORTANT]
-> **Homebridge v2.0 Information**
->
-> This template currently has a
-> - `package.json -> engines.homebridge` value of `"^1.8.0 || ^2.0.0-beta.0"`
-> - `package.json -> devDependencies.homebridge` value of `"^2.0.0-beta.0"`
->
-> This is to ensure that your plugin will build and run on both Homebridge v1 and v2.
->
-> Once Homebridge v2.0 has been released, you can remove the `-beta.0` in both places.
+**Developed by:** Alice (fxPPC)  
+**Status:** Actively developed, targeting Homebridge's **Scoped and Verified** program.
 
 ---
 
-This is a template Homebridge dynamic platform plugin and can be used as a base to help you get started developing your own plugin.
+## Table of Contents
 
-This template should be used in conjunction with the [developer documentation](https://developers.homebridge.io/). A full list of all supported service types, and their characteristics is available on this site.
+- [Introduction](#introduction)
+- [Features](#features)
+  - [Multiple Modes](#multiple-modes)
+  - [Advanced State Management](#advanced-state-management)
+  - [Auto-Lock](#auto-lock)
+  - [Delayed Locking/Unlocking](#delayed-lockingunlocking)
+  - [Logging](#logging)
+  - [Multiple Locks](#multiple-locks)
+  - [Graceful Shutdown](#graceful-shutdown)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Install via npm](#install-via-npm)
+- [Configuration](#configuration)
+  - [Modes Overview](#modes-overview)
+  - [User-Defined Options](#user-defined-options)
+  - [Example Configuration](#example-configuration)
+- [Usage](#usage)
+  - [Lock/Unlock Controls](#lockunlock-controls)
+  - [Auto-Lock and Delays](#auto-lock-and-delays)
+- [Security Considerations](#security-considerations)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support and Contact](#support-and-contact)
 
-### Clone As Template
+---
 
-Click the link below to create a new GitHub Repository using this template, or click the *Use This Template* button above.
+## Introduction
 
-<span align="center">
+**homebridge-power-lock** is a **virtual lock** plugin for Homebridge, created by **Alice (fxPPC)**. It allows you to define locks that operate in different ways, ideal for integrating hardware, third-party systems, or even just a “dummy” lock for testing.
 
-### [Create New Repository From Template](https://github.com/homebridge/homebridge-plugin-template/generate)
+This plugin is under active development, with the goal of meeting Homebridge's **Scoped and Verified** standards to ensure reliability, security, and best practices. Despite its ongoing evolution, it’s already feature-rich and suitable for most use-cases.
 
-</span>
+---
 
-### Setup Development Environment
+## Features
 
-To develop Homebridge plugins you must have Node.js 18 or later installed, and a modern code editor such as [VS Code](https://code.visualstudio.com/). This plugin template uses [TypeScript](https://www.typescriptlang.org/) to make development easier and comes with pre-configured settings for [VS Code](https://code.visualstudio.com/) and ESLint. If you are using VS Code install these extensions:
+### Multiple Modes
 
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+1. **MQTT Mode**  
+   - Connects to an MQTT broker (supports authentication).  
+   - Subscribes to a topic to receive commands (e.g., “open” or “close”).  
+   - Publishes state changes to another topic so external systems can track lock status.
 
-### Install Development Dependencies
+2. **Linux Command Line Mode**  
+   - Executes user-defined shell commands for locking (`closeCommand`) and unlocking (`openCommand`).  
+   - Monitors lock state using a user-defined `monitorCommand`, triggered at a specified interval.  
+   - Ideal for interfacing with scripts, local hardware, or other OS services.
 
-Using a terminal, navigate to the project folder and run this command to install the development dependencies:
+3. **Dummy Mode**  
+   - Creates a virtual lock that doesn’t interact with external systems.  
+   - Useful for testing automation or placeholders where a physical lock doesn’t exist.
 
-```shell
-npm install
+### Advanced State Management
+
+- Maintains lock state (`LockCurrentState` and `LockTargetState`) consistently in HomeKit.  
+- **Persistent Storage**: Uses `accessory.context` to remember the lock’s current and target states across Homebridge restarts.
+
+### Auto-Lock
+
+- **Optional Feature**: Enable auto-lock with a user-defined delay (`autoLockDelay`).  
+- The lock automatically transitions from unlocked to locked after the specified delay, providing additional security.
+
+### Delayed Locking/Unlocking
+
+- **User-Defined Delays**: `lockDelay` and `unlockDelay` let you introduce a custom wait time before performing lock/unlock actions in Command or MQTT modes.  
+- Ideal for timed workflows or hardware that requires a short delay to prepare for locking/unlocking.
+
+### Logging
+
+- **Configurable Verbosity**: Choose from `debug`, `normal`, or `minimal` logging levels.  
+- Facilitates monitoring and troubleshooting. Debug mode provides detailed output for investigating issues.
+
+### Multiple Locks
+
+- Configure **any number of locks** within the same Homebridge instance, each with its own settings and mode.  
+- Compatible with **child bridge** setups for greater scalability or organizational preferences.
+
+### Graceful Shutdown
+
+- Cleans up MQTT connections, intervals, and timeouts when Homebridge stops, preventing resource leaks.  
+- Ensures a stable environment, even after multiple restarts.
+
+---
+
+## Installation
+
+### Prerequisites
+
+- **Homebridge** >= 1.6.0  
+- **Node.js** >= 14.17.0  
+- An internet connection if using MQTT or external commands.
+
+### Install via npm
+
+Run the following command to install globally:
+
+```bash
+sudo npm install -g homebridge-power-lock
 ```
 
-### Update package.json
+## Configuration
 
-Open the [`package.json`](./package.json) and change the following attributes:
+Below are the primary **user-defined options**, organised by the plugin’s three operating modes. Each mode has its own unique configuration settings, while some parameters are common across all modes.
 
-- `name` - this should be prefixed with `homebridge-` or `@username/homebridge-`, is case-sensitive, and contains no spaces nor special characters apart from a dash `-`
-- `displayName` - this is the "nice" name displayed in the Homebridge UI
-- `homepage` - link to your GitHub repo's `README.md`
-- `repository.url` - link to your GitHub repo
-- `bugs.url` - link to your GitHub repo issues page
+---
 
-When you are ready to publish the plugin you should set `private` to false, or remove the attribute entirely.
+### Modes Overview
 
-### Update Plugin Defaults
+- **MQTT Mode**  
+  Integrate with an MQTT broker to publish lock states and subscribe to lock commands.
 
-Open the [`src/settings.ts`](./src/settings.ts) file and change the default values:
+- **Linux Command Line Mode**  
+  Execute custom shell commands to lock/unlock and periodically monitor lock status.
 
-- `PLATFORM_NAME` - Set this to be the name of your platform. This is the name of the platform that users will use to register the plugin in the Homebridge `config.json`.
-- `PLUGIN_NAME` - Set this to be the same name you set in the [`package.json`](./package.json) file.
+- **Dummy Mode**  
+  Create a purely virtual lock without any external integration or commands.
 
-Open the [`config.schema.json`](./config.schema.json) file and change the following attribute:
+---
 
-- `pluginAlias` - set this to match the `PLATFORM_NAME` you defined in the previous step.
+### Common Options (All Modes)
 
-See the [Homebridge API docs](https://developers.homebridge.io/#/config-schema#default-values) for more details on the other attributes you can set in the `config.schema.json` file.
+| **Option**          | **Description**                                                                            | **Default**   |
+|---------------------|--------------------------------------------------------------------------------------------|---------------|
+| **name**            | The display name of the lock in HomeKit.                                                  | *(Required)*  |
+| **mode**            | Which mode to run (`mqtt`, `command`, or `dummy`).                                        | *(Required)*  |
+| **autoLock**        | Whether to enable auto-lock (`true` / `false`).                                           | `false`       |
+| **autoLockDelay**   | Delay in seconds before the lock automatically locks itself (if `autoLock` is `true`).    | `30`          |
+| **lockDelay**       | Delay (in seconds) before locking.                                                        | `0`           |
+| **unlockDelay**     | Delay (in seconds) before unlocking.                                                      | `0`           |
+| **logging**         | Log verbosity: `debug`, `normal`, `minimal`.                                              | `normal`      |
 
-### Build Plugin
+---
 
-TypeScript needs to be compiled into JavaScript before it can run. The following command will compile the contents of your [`src`](./src) directory and put the resulting code into the `dist` folder.
+### MQTT Mode Settings
 
-```shell
-npm run build
-```
+If you set `"mode": "mqtt"`, the lock’s behaviour is configured via the following **`mqttSettings`** object:
 
-### Link To Homebridge
+| **Option**                  | **Description**                                                                               | **Default**           |
+|----------------------------|-----------------------------------------------------------------------------------------------|-----------------------|
+| **mqttBroker**             | Address of the MQTT broker (e.g., `mqtt://localhost`).                                       | `mqtt://localhost`    |
+| **mqttPort**               | Port of the MQTT broker.                                                                     | `1883`                |
+| **mqttUsername**           | *(Optional)* Username for broker authentication.                                             | `""` (empty)          |
+| **mqttPassword**           | *(Optional)* Password for broker authentication.                                             | `""` (empty)          |
+| **mqttTopicSubscribe**     | Topic to subscribe to for lock commands.                                                     | `home/lock/command`   |
+| **mqttOpenMessage**        | Message that indicates an **unlock** command.                                                | `open`                |
+| **mqttCloseMessage**       | Message that indicates a **lock** command.                                                   | `close`               |
+| **mqttTopicPublish**       | Topic to publish lock state changes to.                                                      | `home/lock/state`     |
+| **mqttPublishOpenMessage** | Message published when lock transitions to **unlocked**.                                     | `opened`              |
+| **mqttPublishCloseMessage**| Message published when lock transitions to **locked**.                                       | `closed`              |
 
-Run this command so your global installation of Homebridge can discover the plugin in your development environment:
+**Notes:**
+- MQTT username/password can be omitted if the broker doesn’t require authentication.
+- If `mqttUsername` is provided, `mqttPassword` should also be provided (and vice versa).
 
-```shell
-npm link
-```
+---
 
-You can now start Homebridge, use the `-D` flag, so you can see debug log messages in your plugin:
+### Linux Command Line Mode Settings
 
-```shell
-homebridge -D
-```
+If you set `"mode": "command"`, the lock’s behaviour is defined through **`commandSettings`**:
 
-### Watch For Changes and Build Automatically
+| **Option**           | **Description**                                                                                  | **Default** |
+|----------------------|------------------------------------------------------------------------------------------------|------------|
+| **openCommand**      | Shell command to **unlock** the lock.                                                          | *(None)*   |
+| **closeCommand**     | Shell command to **lock** the lock.                                                            | *(None)*   |
+| **monitorCommand**   | Shell command that should output the lock state (`open`, `closed`, `unsecured`, `secured`).    | *(None)*   |
+| **monitorInterval**  | Interval (in seconds) to run the monitor command and update the lock state if changed.         | `60`       |
 
-If you want to have your code compile automatically as you make changes, and restart Homebridge automatically between changes, you first need to add your plugin as a platform in `./test/hbConfig/config.json`:
-```
+**Notes:**
+- Use `monitorCommand` to keep HomeKit’s lock state in sync with external hardware or system conditions.
+- Outputs should be **lowercase**: `open`, `closed`, `unsecured`, or `secured`.
+
+---
+
+### Dummy Mode
+
+If you set `"mode": "dummy"`, there are **no additional settings** needed. The lock is purely virtual and does not run any external commands or communicate over MQTT.
+
+---
+
+### Example Configuration
+
+Below is a sample `config.json` snippet illustrating how you might configure multiple locks with different modes:
+
+```json
 {
-...
-    "platforms": [
+  "platforms": [
+    {
+      "platform": "PowerLockPlatform",
+      "locks": [
         {
-            "name": "Config",
-            "port": 8581,
-            "platform": "config"
+          "name": "Front Door Lock",
+          "mode": "mqtt",
+          "autoLock": true,
+          "autoLockDelay": 30,
+          "lockDelay": 5,
+          "unlockDelay": 5,
+          "logging": "normal",
+          "mqttSettings": {
+            "mqttBroker": "mqtt://localhost",
+            "mqttPort": 1883,
+            "mqttUsername": "mqttuser",
+            "mqttPassword": "mqttpass",
+            "mqttTopicSubscribe": "home/lock/command",
+            "mqttOpenMessage": "open",
+            "mqttCloseMessage": "close",
+            "mqttTopicPublish": "home/lock/state",
+            "mqttPublishOpenMessage": "opened",
+            "mqttPublishCloseMessage": "closed"
+          }
         },
         {
-            "name": "<PLUGIN_NAME>",
-            //... any other options, as listed in config.schema.json ...
-            "platform": "<PLATFORM_NAME>"
+          "name": "Garage Lock",
+          "mode": "command",
+          "autoLock": false,
+          "lockDelay": 0,
+          "unlockDelay": 0,
+          "logging": "debug",
+          "commandSettings": {
+            "openCommand": "echo 'unlocking garage'",
+            "closeCommand": "echo 'locking garage'",
+            "monitorCommand": "echo 'closed'",
+            "monitorInterval": 60
+          }
+        },
+        {
+          "name": "Test Dummy Lock",
+          "mode": "dummy",
+          "autoLock": false,
+          "logging": "minimal"
         }
-    ]
+      ]
+    }
+  ]
 }
 ```
+### Configuration Validation
 
-and then you can run:
-
-```shell
-npm run watch
-```
-
-This will launch an instance of Homebridge in debug mode which will restart every time you make a change to the source code. It will load the config stored in the default location under `~/.homebridge`. You may need to stop other running instances of Homebridge while using this command to prevent conflicts. You can adjust the Homebridge startup command in the [`nodemon.json`](./nodemon.json) file.
-
-### Customise Plugin
-
-You can now start customising the plugin template to suit your requirements.
-
-- [`src/platform.ts`](./src/platform.ts) - this is where your device setup and discovery should go.
-- [`src/platformAccessory.ts`](./src/platformAccessory.ts) - this is where your accessory control logic should go, you can rename or create multiple instances of this file for each accessory type you need to implement as part of your platform plugin. You can refer to the [developer documentation](https://developers.homebridge.io/) to see what characteristics you need to implement for each service type.
-- [`config.schema.json`](./config.schema.json) - update the config schema to match the config you expect from the user. See the [Plugin Config Schema Documentation](https://developers.homebridge.io/#/config-schema).
-
-### Versioning Your Plugin
-
-Given a version number `MAJOR`.`MINOR`.`PATCH`, such as `1.4.3`, increment the:
-
-1. **MAJOR** version when you make breaking changes to your plugin,
-2. **MINOR** version when you add functionality in a backwards compatible manner, and
-3. **PATCH** version when you make backwards compatible bug fixes.
-
-You can use the `npm version` command to help you with this:
-
-```shell
-# major update / breaking changes
-npm version major
-
-# minor update / new features
-npm version update
-
-# patch / bugfixes
-npm version patch
-```
-
-### Publish Package
-
-When you are ready to publish your plugin to [npm](https://www.npmjs.com/), make sure you have removed the `private` attribute from the [`package.json`](./package.json) file then run:
-
-```shell
-npm publish
-```
-
-If you are publishing a scoped plugin, i.e. `@username/homebridge-xxx` you will need to add `--access=public` to command the first time you publish.
-
-#### Publishing Beta Versions
-
-You can publish *beta* versions of your plugin for other users to test before you release it to everyone.
-
-```shell
-# create a new pre-release version (eg. 2.1.0-beta.1)
-npm version prepatch --preid beta
-
-# publish to @beta
-npm publish --tag=beta
-```
-
-Users can then install the  *beta* version by appending `@beta` to the install command, for example:
-
-```shell
-sudo npm install -g homebridge-example-plugin@beta
-```
-
-### Best Practices
-
-Consider creating your plugin with the [Homebridge Verified](https://github.com/homebridge/verified) criteria in mind. This will help you to create a plugin that is easy to use and works well with Homebridge.
-You can then submit your plugin to the Homebridge Verified list for review.
-The most up-to-date criteria can be found [here](https://github.com/homebridge/verified#requirements).
-For reference, the current criteria are:
-
-- **General**
-  - The plugin must be of type [dynamic platform](https://developers.homebridge.io/#/#dynamic-platform-template).
-  - The plugin must not offer the same nor less functionality than that of any existing **verified** plugin.
-- **Repo**
-  - The plugin must be published to NPM and the source code available on a GitHub repository, with issues enabled.
-  - A GitHub release should be created for every new version of your plugin, with release notes.
-- **Environment**
-  - The plugin must run on all [supported LTS versions of Node.js](https://github.com/homebridge/homebridge/wiki/How-To-Update-Node.js), at the time of writing this is Node v18, v20 and v22.
-  - The plugin must successfully install and not start unless it is configured.
-  - The plugin must not execute post-install scripts that modify the users' system in any way.
-  - The plugin must not require the user to run Homebridge in a TTY or with non-standard startup parameters, even for initial configuration.
-- **Codebase**
-  - The plugin must implement the [Homebridge Plugin Settings GUI](https://developers.homebridge.io/#/config-schema).
-  - The plugin must not contain any analytics or calls that enable you to track the user.
-  - If the plugin needs to write files to disk (cache, keys, etc.), it must store them inside the Homebridge storage directory.
-  - The plugin must not throw unhandled exceptions, the plugin must catch and log its own errors.
-
-### Useful Links
-
-Note these links are here for help but are not supported/verified by the Homebridge team
-
-- [Custom Characteristics](https://github.com/homebridge/homebridge-plugin-template/issues/20)
+- The plugin automatically **validates** your configuration at startup.
+- If any **required fields** are missing or set incorrectly (for instance, a negative `monitorInterval` or an invalid `lockDelay`), the plugin will log errors and **skip initialization** of that lock.
+- Detailed error messages in the Homebridge logs guide you to correct configuration issues promptly.
+- Ensure all required properties (e.g., `mqttSettings` for MQTT mode) and valid numeric ranges (e.g., non-negative `lockDelay` and `unlockDelay`) are set.
