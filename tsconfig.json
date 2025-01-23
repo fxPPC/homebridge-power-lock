@@ -11,7 +11,7 @@
     "declaration": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "type": "commonjs"
+    "types": "commonjs"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
