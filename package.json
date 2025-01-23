@@ -44,7 +44,6 @@
     "mqtt": "^4.3.7"
   },
   "devDependencies": {
-    // Update these to unify versions and avoid ERESOLVE conflicts:
     "eslint": "^8.32.0",
     "@typescript-eslint/parser": "^5.58.0",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
