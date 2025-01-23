@@ -1,7 +1,7 @@
 import {
   API,
   APIEvent,
-  CharacteristicValue, // <-- Added this import for the setTargetState method
+  CharacteristicValue, 
   DynamicPlatformPlugin,
   Logger,
   PlatformAccessory,
