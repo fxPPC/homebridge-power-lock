@@ -1,6 +1,7 @@
 import {
   API,
   APIEvent,
+  CharacteristicValue, // <-- Added this import for the setTargetState method
   DynamicPlatformPlugin,
   Logger,
   PlatformAccessory,
@@ -51,7 +52,7 @@ interface LockConfig {
 
 class PowerLockAccessory {
   private service: Service;
-  private readonly accessory: PlatformAccessory; // FIX: store accessory instance
+  private readonly accessory: PlatformAccessory;
   private readonly config: LockConfig;
   private readonly log: Logger;
   private readonly api: API;
@@ -76,7 +77,7 @@ class PowerLockAccessory {
     this.config = config;
     this.api = api;
     this.hap = this.api.hap;
-    this.accessory = accessory; // FIX: store accessory
+    this.accessory = accessory;
 
     // Retrieve stored state or default to secured
     this.isLocked = accessory.context.isLocked !== undefined
@@ -298,9 +299,9 @@ class PowerLockAccessory {
   }
 
   // ----- STATE CHANGES -----
-  private async setTargetState(value: Characteristic.Value) {
+  private async setTargetState(value: CharacteristicValue) {
     const desiredState =
-      value === this.hap.Characteristic.LockTargetState.SECURED;
+      value === this.api.hap.Characteristic.LockTargetState.SECURED;
     this.logInfo(
       `[${this.config.name}] Setting target state to ${
         desiredState ? 'SECURED' : 'UNSECURED'
@@ -571,7 +572,6 @@ export default class PowerLockPlatform implements DynamicPlatformPlugin {
   }
 
   private validateConfig(lockConfig: LockConfig) {
-    // Validate based on mode
     switch (lockConfig.mode) {
       case 'mqtt': {
         if (!lockConfig.mqttSettings) {
@@ -595,7 +595,6 @@ export default class PowerLockPlatform implements DynamicPlatformPlugin {
             `Lock "${lockConfig.name}" is missing 'mqttTopicPublish' in MQTT settings.`
           );
         }
-        // Check optional credentials
         if (
           (m.mqttUsername && !m.mqttPassword) ||
           (!m.mqttUsername && m.mqttPassword)
