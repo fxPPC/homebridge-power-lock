@@ -90,9 +90,8 @@ This plugin is under active development, with the goal of meeting Homebridge's *
 
 ### Prerequisites
 
-- **Homebridge** >= 1.6.0  
-- **Node.js** >= 14.17.0  
-- An internet connection if using MQTT or external commands.
+- **Homebridge** >= 1.8.0 
+- **Node.js** >= 18.0.0  
 
 ### Install via npm
 
