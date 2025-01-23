@@ -10,8 +10,7 @@
     "moduleResolution": "node",
     "declaration": true,
     "sourceMap": true,
-    "resolveJsonModule": true,
-    "types": "commonjs"
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
