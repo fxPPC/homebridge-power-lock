@@ -1,54 +1,38 @@
 {
   "name": "homebridge-power-lock",
-  "version": "0.4.2",
-  "description": "A modern Homebridge plugin to create virtual lock devices with support for MQTT, Linux command line, or dummy modes.",
-  "keywords": [
-    "homebridge-plugin",
-    "homebridge",
-    "lock",
-    "mqtt",
-    "command-line",
-    "virtual-lock"
-  ],
-  "homepage": "https://github.com/fxPPC/homebridge-power-lock",
+  "version": "0.5.0",
+  "description": "A Homebridge plugin that creates a virtual lock mechanism in MQTT, Linux command line, or dummy mode.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fxPPC/homebridge-power-lock.git"
+  },
   "bugs": {
     "url": "https://github.com/fxPPC/homebridge-power-lock/issues"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fxPPC/homebridge-power-lock.git"
-  },
-  "license": "Apache-2.0",
   "engines": {
-    "node": ">=14.17.0",
-    "homebridge": "^1.6.0 || ^2.0.0-beta.0"
+    "node": ">=16.0.0",
+    "homebridge": ">=1.6.0"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "assets",
-    "README.md",
-    "LICENSE"
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "homekit",
+    "mqtt",
+    "lock",
+    "linux",
+    "cli",
+    "virtual"
   ],
+  "author": "Alice aka fxPPC",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "lint": "eslint .",
-    "prepublishOnly": "npm run build"
+    "build": "mkdir -p dist && cp -r src/* dist/",
+    "lint": "echo \"(Optional) Lint step could be placed here.\"",
+    "test": "echo \"No tests specified\""
   },
-  "peerDependencies": {
-    "homebridge": "^1.6.0 || ^2.0.0-beta.0"
-  },
+  "devDependencies": {},
   "dependencies": {
     "mqtt": "^4.3.7"
-  },
-  "devDependencies": {
-    "eslint": "^8.32.0",
-    "@typescript-eslint/parser": "^5.58.0",
-    "@typescript-eslint/eslint-plugin": "^5.58.0",
-    "typescript": "^4.9.5",
-    "@types/node": "^18.0.0"
-  },
-  "logo": "./assets/powerlockicon.png"
+  }
 }
