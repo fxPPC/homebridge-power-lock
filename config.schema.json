@@ -1,17 +1,216 @@
 {
-  "pluginAlias": "ExampleHomebridgePlugin",
-  "pluginType": "platform",
-  "singular": true,
-  "strictValidation": false,
-  "schema": {
-    "type": "object",
-    "properties": {
-      "name": {
-        "title": "Name",
-        "type": "string",
-        "required": true,
-        "default": "Example Dynamic Platform"
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "homebridge-power-lock",
+  "description": "A Homebridge plugin to create virtual locks with MQTT, command line, or dummy modes.",
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string",
+      "enum": ["PowerLockPlatform"],
+      "default": "PowerLockPlatform",
+      "description": "Platform name, should be 'PowerLockPlatform'."
+    },
+    "locks": {
+      "type": "array",
+      "title": "Locks",
+      "description": "List of locks to configure.",
+      "items": {
+        "type": "object",
+        "required": ["name", "mode"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Lock Name",
+            "description": "Name of the lock."
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["mqtt", "command", "dummy"],
+            "title": "Operating Mode",
+            "description": "Operating mode of the lock."
+          },
+          "autoLock": {
+            "type": "boolean",
+            "default": false,
+            "title": "Enable Auto-Lock",
+            "description": "Enable auto-lock feature."
+          },
+          "autoLockDelay": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 30,
+            "title": "Auto-Lock Delay",
+            "description": "Delay in seconds before auto-lock is triggered.",
+            "ui:widget": "number",
+            "ui:options": { "step": 1 }
+          },
+          "lockDelay": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Lock Delay",
+            "description": "Delay in seconds before locking.",
+            "ui:widget": "number",
+            "ui:options": { "step": 1 }
+          },
+          "unlockDelay": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Unlock Delay",
+            "description": "Delay in seconds before unlocking.",
+            "ui:widget": "number",
+            "ui:options": { "step": 1 }
+          },
+          "logging": {
+            "type": "string",
+            "enum": ["debug", "normal", "minimal"],
+            "default": "normal",
+            "title": "Logging Level",
+            "description": "Logging level."
+          },
+          "mqttSettings": {
+            "type": "object",
+            "title": "MQTT Settings",
+            "properties": {
+              "mqttBroker": {
+                "type": "string",
+                "title": "MQTT Broker",
+                "description": "Address of the MQTT broker (e.g., mqtt://localhost).",
+                "default": "mqtt://localhost",
+                "ui:widget": "text"
+              },
+              "mqttPort": {
+                "type": "integer",
+                "title": "MQTT Port",
+                "description": "Port of the MQTT broker.",
+                "default": 1883,
+                "ui:widget": "number"
+              },
+              "mqttUsername": {
+                "type": "string",
+                "title": "MQTT Username",
+                "description": "Username for MQTT authentication.",
+                "default": "",
+                "ui:widget": "text"
+              },
+              "mqttPassword": {
+                "type": "string",
+                "title": "MQTT Password",
+                "description": "Password for MQTT broker authentication.",
+                "default": "",
+                "ui:widget": "password"
+              },
+              "mqttTopicSubscribe": {
+                "type": "string",
+                "title": "MQTT Topic to Subscribe",
+                "description": "MQTT topic to monitor for lock state changes.",
+                "default": "home/lock/command",
+                "ui:widget": "text"
+              },
+              "mqttOpenMessage": {
+                "type": "string",
+                "title": "MQTT Open Message",
+                "description": "MQTT message to open the lock.",
+                "default": "open",
+                "ui:widget": "text"
+              },
+              "mqttCloseMessage": {
+                "type": "string",
+                "title": "MQTT Close Message",
+                "description": "MQTT message to close the lock.",
+                "default": "close",
+                "ui:widget": "text"
+              },
+              "mqttTopicPublish": {
+                "type": "string",
+                "title": "MQTT Topic to Publish",
+                "description": "MQTT topic to publish lock state changes.",
+                "default": "home/lock/state",
+                "ui:widget": "text"
+              },
+              "mqttPublishOpenMessage": {
+                "type": "string",
+                "title": "MQTT Publish Open Message",
+                "description": "MQTT message to publish when lock is opened.",
+                "default": "opened",
+                "ui:widget": "text"
+              },
+              "mqttPublishCloseMessage": {
+                "type": "string",
+                "title": "MQTT Publish Close Message",
+                "description": "MQTT message to publish when lock is closed.",
+                "default": "closed",
+                "ui:widget": "text"
+              }
+            },
+            "required": [
+              "mqttBroker",
+              "mqttTopicSubscribe",
+              "mqttTopicPublish"
+            ],
+            "additionalProperties": false
+          },
+          "commandSettings": {
+            "type": "object",
+            "title": "Command Line Settings",
+            "properties": {
+              "openCommand": {
+                "type": "string",
+                "title": "Open Command",
+                "description": "Linux shell command to open the lock.",
+                "default": "",
+                "ui:widget": "text"
+              },
+              "closeCommand": {
+                "type": "string",
+                "title": "Close Command",
+                "description": "Linux shell command to close the lock.",
+                "default": "",
+                "ui:widget": "text"
+              },
+              "monitorCommand": {
+                "type": "string",
+                "title": "Monitor Command",
+                "description": "Linux shell command to monitor the lock's state.",
+                "default": "",
+                "ui:widget": "text"
+              },
+              "monitorInterval": {
+                "type": "integer",
+                "minimum": 1,
+                "title": "Monitor Interval",
+                "description": "Interval in seconds between running the monitoring command.",
+                "default": 60,
+                "ui:widget": "number",
+                "ui:options": { "step": 1 }
+              }
+            },
+            "required": ["openCommand", "closeCommand", "monitorCommand", "monitorInterval"],
+            "additionalProperties": false
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": { "mode": { "const": "mqtt" } }
+            },
+            "then": {
+              "required": ["mqttSettings"]
+            }
+          },
+          {
+            "if": {
+              "properties": { "mode": { "const": "command" } }
+            },
+            "then": {
+              "required": ["commandSettings"]
+            }
+          }
+        ]
       }
     }
-  }
+  },
+  "required": ["platform", "locks"],
+  "additionalProperties": false
 }
